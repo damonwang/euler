@@ -86,6 +86,11 @@ class TestSolve(unittest.TestCase):
 
         self.assert_(solve(n=-10) == 0)
 
+    def test_more_divisors(self):
+        "three divisors"
+
+        self.assert_(solve(divisors=[2, 3, 5], n=10) == 37)
+
     def test_solve(self):
         "solution"
 
