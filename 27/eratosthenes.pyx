@@ -24,6 +24,5 @@ def sieve(buf):
 
     for i in xrange(2, max_index):
         if not A[i]: continue
-        for j in xrange(2 * i, maximum, i):
-            A[j] = 0
+        A[2*i::i] = 0
 

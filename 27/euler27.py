@@ -1,8 +1,16 @@
-from itertools import islice
+from itertools import islice, takewhile, count
+from operator import itemgetter, mul
 import numpy as np 
 import unittest 
+import os
+from os import path
 
-from euler12 import eratosthenes
+import pyximport
+pyximport.install()
+
+import eratosthenes
+
+__cache__ = 'cache.npy'
 
 '''
 If our quadratic is
@@ -28,9 +36,67 @@ The fastest way to check primality of numbers in the 10^6 range is to enumerate
 them all with a sieve.
 '''
 
-primes = islice(
 
-is_prime = np.zeros((200
+if path.exists(__cache__):
+    primes = np.load(__cache__)
+    is_prime = np.zeros((5e6), dtype='bool')
+    is_prime[primes] = True
+else:
+    is_prime = np.ones((5e6), dtype='int8')
+    eratosthenes.sieve(is_prime)
+    is_prime.dtype = 'bool'
+    primes = np.where(is_prime)[0]
+    np.save(__cache__, primes)
+
+def candidates(max_a, max_b):
+    '''
+    candidates(int max_a=1000, int max_b=1000) yields (int, int)
+
+    Given the bounds |a| < max_a and |b| < max_b, yields candidates for
+    (a, b) as described above.
+    '''
+
+    for b in takewhile(lambda x: x < max_b, primes):
+        for q in takewhile(lambda x: x < 1 + max_a + b, primes):
+            yield (q - 1 - b, b)
+
+def take(n, seq):
+    '''
+    take(n, iterable seq) yields item
+
+    yields the first n items of iterable seq
+    '''
+
+    return takewhile(lambda x, i=count(): next(i) < n, seq)
+
+def iterlen(seq):
+    '''
+    iterlen(iterable seq) -> int
+
+    destructively returns the length of an iterator. NOT safe for infinite generators.
+    '''
+
+    rv = 0
+    for i in seq:
+        rv += 1
+    return rv
+
+def score(a, b):
+    '''
+    score(int a, int b) -> int
+
+    returns max N s.t. for all n in 0..N, n^2 + an + b is prime.
+    '''
+
+    rv = iterlen(takewhile(lambda n: is_prime[n*n + a*n + b], count()))
+    assert rv > 1
+    return rv
+
+def solve(max_a=1000, max_b=1000):
+
+    rv = [ (a, b, score(a, b)) for a, b in candidates(max_a, max_b) ]
+    coeffs = max(*rv, key=itemgetter(2))[:2]
+    return reduce(mul, coeffs)
 
 def run_tests(verbosity=0, tests=[]):
     tests = [ unittest.TestLoader().loadTestsFromTestCase(v)

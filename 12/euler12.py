@@ -6,7 +6,7 @@ from itertools import *
 from numbers import Integral
 import cProfile
 
-def eratosthenes(block=[2, 3, 5, 7, 9, 11, 13, 17, 19], width=4):
+def eratosthenes(block=[2, 3, 5, 7, 11, 13, 17, 19], width=4):
     '''
     eratosthenes() yields int
 
