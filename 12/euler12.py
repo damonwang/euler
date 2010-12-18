@@ -3,6 +3,7 @@
 import numpy as np
 from operator import mul, itemgetter
 from itertools import *
+from numbers import Integral
 import cProfile
 
 def eratosthenes(block=[2, 3, 5, 7, 9, 11, 13, 17, 19], width=4):
@@ -30,6 +31,11 @@ def eratosthenes(block=[2, 3, 5, 7, 9, 11, 13, 17, 19], width=4):
             first += width
 
 def prime_factorize(n, primes=None):
+    if n < 2: 
+        raise ValueError(n, 'expected n >= 2, got %s' % n)
+    if not isinstance(n, Integral): 
+        raise ValueError(n, 'expected integer, got %s' % n)
+
     if primes is None: primes = eratosthenes()
     factors = {}
     for p in primes:
