@@ -7,6 +7,11 @@ from numbers import Integral
 import cProfile
 
 def eratosthenes(block=[2, 3, 5, 7, 9, 11, 13, 17, 19], width=4):
+    '''
+    eratosthenes() yields int
+
+    yields successive primes indefinitely using Eratosthenes' sieve
+    '''
 
     for b in block:
         yield b
