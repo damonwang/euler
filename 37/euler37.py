@@ -1,4 +1,5 @@
 from os import path
+import unittest
 import numpy as np
 import pyximport
 pyximport.install()
@@ -14,6 +15,7 @@ else:
     is_prime = np.ones(__max_prime__, dtype='int8')
     eratosthenes.sieve(is_prime)
     primes = np.where(is_prime)[0]
+    np.save(__cache__, primes)
 
 def left_truncatable(n, moduli=[ 10**(i+1) 
         for i in xrange(int(np.log10(__max_prime__))) ]):
@@ -48,4 +50,17 @@ def solve():
     assert len(rv) == 11
     return sum(rv)
     
+class TestSolve(unittest.TestCase):
 
+    def test_solve(self):
+        self.assert_(solve() == 748317)
+
+def run_tests(verbosity=0, tests=[]):
+    tests = [ unittest.TestLoader().loadTestsFromTestCase(v)
+            for k,v in globals().items()
+            if k.startswith("Test") and (tests == [] or k in tests)]
+    unittest.TextTestRunner(verbosity=verbosity).run(unittest.TestSuite(tests))
+
+if __name__ == '__main__':
+
+    run_tests()
