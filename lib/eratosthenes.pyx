@@ -11,7 +11,7 @@ def sieve(buf):
     '''
     sieve(ndarray A) -> None
 
-    Given an ndarray (dtype bool, ndim 1) initialized to True, set to
+    Given an ndarray (dtype int8, ndim 1) initialized to True, set to
     False all entires at composite indices.
     '''
 
